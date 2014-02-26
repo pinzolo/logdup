@@ -1,6 +1,10 @@
 # Logdup
 
-Logdup duplicates logs partially.
+[![Build Status](https://secure.travis-ci.org/pinzolo/logdup.png)](http://travis-ci.org/pinzolo/logdup)
+[![Coverage Status](https://coveralls.io/repos/pinzolo/logdup/badge.png)](https://coveralls.io/r/pinzolo/logdup)
+
+`Logdup` duplicates logs partially.  
+This extends `Logger` that is a built-in library of Ruby.
 
 ## Installation
 
@@ -18,7 +22,32 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+#### code
+
+```ruby
+logger = Logger.new("base.log")
+logger.info("aaa")
+logger.dup_to("other.log") do
+  logger.info("bbb")
+end
+logger.info("ccc")
+```
+
+#### result
+
+    $ cat base.log
+    aaa
+    bbb
+    ccc
+
+    $ cat other.log
+    bbb
+
+## Supported ruby versions
+
+* 1.9.3
+* 2.0.0
+* 2.1.0
 
 ## Contributing
 
