@@ -1,6 +1,6 @@
 # Logdup
 
-TODO: Write a gem description
+Logdup duplicates logs partially.
 
 ## Installation
 

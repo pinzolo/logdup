@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Logdup::VERSION
   spec.authors       = ["pinzolo"]
   spec.email         = ["pinzolo@gmail.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.description   = %q{Logdup duplicates logs partially.}
+  spec.summary       = spec.description
   spec.homepage      = ""
   spec.license       = "MIT"
 
