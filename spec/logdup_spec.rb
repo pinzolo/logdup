@@ -148,8 +148,15 @@ describe Logger do
           expect(File.exists?(log_file("buffer"))).to be_false
           logger.info("info-03")
           expect(File.exists?(log_file("buffer"))).to be_true
-          expect(include_message?(File.readlines(log_file("buffer")), "info-01")).to be_true
+          lines = File.readlines(log_file("buffer"))
+          expect(include_message?(lines, "info-01")).to be_true
+          expect(include_message?(lines, "info-02")).to be_false
+          expect(include_message?(lines, "info-03")).to be_false
         end
+        lines = File.readlines(log_file("buffer"))
+        expect(include_message?(lines, "info-01")).to be_true
+        expect(include_message?(lines, "info-02")).to be_true
+        expect(include_message?(lines, "info-03")).to be_true
       end
     end
   end

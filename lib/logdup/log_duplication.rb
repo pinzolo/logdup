@@ -40,7 +40,7 @@ module Logdup
 
     def put_first_log_if_size_over
       if buffer_size && logs.size >= buffer_size
-        logdev.write(logs.unshift)
+        logdev.write(logs.shift)
       end
     end
   end
