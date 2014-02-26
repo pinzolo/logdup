@@ -5,8 +5,8 @@ def log_dir
   File.expand_path('../log', __FILE__)
 end
 
-def base_log
-  "#{log_dir}/base.log"
+def base_log(num)
+  "#{log_dir}/base-#{num}.log"
 end
 
 def single_log
@@ -15,6 +15,10 @@ end
 
 def nested_log(num)
   "#{log_dir}/nested-#{num}.log"
+end
+
+def thread_log
+  "#{log_dir}/thread.log"
 end
 
 def include_log?(file, log)
@@ -31,15 +35,13 @@ end
 
 describe Logger do
   before(:all) do
-    delete_log("base")
-    delete_log("single")
-    delete_log("nested-1")
-    delete_log("nested-2")
+    log_files = Dir.entries(log_dir).select { |e| e.end_with?(".log") }
+    log_files.each { |log_file| File.delete("#{log_dir}/#{log_file}") }
   end
   describe "#dup_to" do
     context "on single using" do
       before(:all) do
-        logger = Logger.new(base_log)
+        logger = Logger.new(base_log(1))
         syms.each do |sym|
           logger.send(sym, "#{sym}-01")
         end
@@ -53,7 +55,7 @@ describe Logger do
         end
       end
       it "logged all in base.log" do
-        lines = File.readlines(base_log)
+        lines = File.readlines(base_log(1))
         syms.each do |sym|
           1.upto(3) do |i|
             expect(lines.any? { |line| line.include?("#{sym}-0#{i}") }).to be_true
@@ -71,7 +73,7 @@ describe Logger do
     end
     context "on nested using" do
       before(:all) do
-        logger = Logger.new(base_log)
+        logger = Logger.new(base_log(2))
         syms.each do |sym|
           logger.send(sym, "#{sym}-01")
         end
@@ -93,7 +95,7 @@ describe Logger do
         end
       end
       it "logged all in base.log" do
-        lines = File.readlines(base_log)
+        lines = File.readlines(base_log(2))
         syms.each do |sym|
           1.upto(5) do |i|
             expect(lines.any? { |line| line.include?("#{sym}-0#{i}") }).to be_true
@@ -118,6 +120,38 @@ describe Logger do
           expect(lines.any? { |line| line.include?("#{sym}-03") }).to be_true
           expect(lines.any? { |line| line.include?("#{sym}-04") }).to be_false
           expect(lines.any? { |line| line.include?("#{sym}-05") }).to be_false
+        end
+      end
+    end
+    context "on using in other thread" do
+      before(:all) do
+        logger = Logger.new(base_log(3))
+        logger.info("info-01")
+        Thread.new do
+          logger.info("info-02")
+        end
+        logger.dup_to(thread_log) do
+          logger.info("info-03")
+          Thread.new do
+            logger.info("info-04")
+          end
+        end
+        logger.info("info-05")
+      end
+      it "logged all in base.log" do
+        lines = File.readlines(base_log(2))
+        1.upto(5) do |i|
+          expect(lines.any? { |line| line.include?("info-0#{i}") }).to be_true
+        end
+      end
+      it "logged at same thread in thread.log" do
+        lines = File.readlines(thread_log)
+        syms.each do |sym|
+          expect(lines.any? { |line| line.include?("info-01") }).to be_false
+          expect(lines.any? { |line| line.include?("info-02") }).to be_false
+          expect(lines.any? { |line| line.include?("info-03") }).to be_true
+          expect(lines.any? { |line| line.include?("info-04") }).to be_false
+          expect(lines.any? { |line| line.include?("info-05") }).to be_false
         end
       end
     end
