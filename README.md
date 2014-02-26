@@ -33,7 +33,7 @@ end
 logger.info("ccc")
 ```
 
-#### result
+#### result image
 
     $ cat base.log
     aaa
