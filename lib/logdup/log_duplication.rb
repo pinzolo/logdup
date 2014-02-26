@@ -32,6 +32,7 @@ module Logdup
 
     def output_sync
       logs.each { |log| logdev.write(log) }
+      logdev.close
     end
 
     def output_async
