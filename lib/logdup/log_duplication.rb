@@ -3,22 +3,44 @@ require 'logger'
 
 module Logdup
   class LogDuplication
-    attr_reader :device, :logs
+    attr_reader :device, :logs, :async_output, :buffer_size
 
-    def initialize(device)
+    def initialize(device, options = {})
       @device = device
+      @async_output = options[:async_output] || false
+      @buffer_size = options[:buffer_size]
       @logs = []
       @thread_id = Thread.current.object_id
     end
 
     def <<(message)
-      @logs << message if @thread_id == Thread.current.object_id
+      if @thread_id == Thread.current.object_id
+        put_first_log_if_size_over
+        logs << message
+      end
     end
 
     def output
-      logdev = Logger::LogDevice.new(device)
-      logs.each do |log|
-        logdev.write(log)
+      @async_output ? output_async : output_sync
+    end
+
+    private
+
+    def logdev
+      @logdev ||= Logger::LogDevice.new(device)
+    end
+
+    def output_sync
+      logs.each { |log| logdev.write(log) }
+    end
+
+    def output_async
+      Thread.new { output_sync }
+    end
+
+    def put_first_log_if_size_over
+      if buffer_size && logs.size >= buffer_size
+        logdev.write(logs.unshift)
       end
     end
   end

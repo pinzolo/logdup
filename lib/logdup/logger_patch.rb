@@ -5,8 +5,8 @@ require 'logdup/log_duplication'
 class Logger
   alias_method :__format_message__, :format_message
 
-  def dup_to(device, &block)
-    duplications << Logdup::LogDuplication.new(device)
+  def dup_to(device, options = {}, &block)
+    duplications << Logdup::LogDuplication.new(device, options)
     yield(block)
     duplications.pop.output
   end
