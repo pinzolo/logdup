@@ -5,6 +5,13 @@
 # loaded once.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+require "coveralls"
+require "simplecov"
+SimpleCov.formatter = Coveralls::SimpleCov::Formatter
+SimpleCov.start do
+  add_filter '/spec/'
+  add_filter '/bundle/'
+end
 require 'logdup'
 
 RSpec.configure do |config|
