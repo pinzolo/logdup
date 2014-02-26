@@ -1,5 +1,3 @@
-require "logdup/version"
-
-module Logdup
-  # Your code goes here...
-end
+# coding: utf-8
+require 'logdup/version'
+require 'logdup/logger_patch'
