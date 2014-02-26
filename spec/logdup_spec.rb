@@ -111,16 +111,18 @@ describe Logger do
       before(:all) do
         logger = Logger.new(log_file("base-on-thread"))
         logger.info("info-01")
-        Thread.new do
+        t1 = Thread.new do
           logger.info("info-02")
         end
         logger.dup_to(log_file("thread")) do
           logger.info("info-03")
-          Thread.new do
+          t2 = Thread.new do
             logger.info("info-04")
           end
+          t2.join
         end
         logger.info("info-05")
+        t1.join
       end
       it "logged all in base-on-thread.log" do
         lines = File.readlines(log_file("base-on-thread"))
