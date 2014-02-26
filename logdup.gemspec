@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["pinzolo@gmail.com"]
   spec.description   = %q{Logdup duplicates logs partially.}
   spec.summary       = spec.description
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/pinzolo/logdup"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
