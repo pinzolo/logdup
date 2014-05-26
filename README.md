@@ -3,7 +3,7 @@
 [![Build Status](https://secure.travis-ci.org/pinzolo/logdup.png)](http://travis-ci.org/pinzolo/logdup)
 [![Coverage Status](https://coveralls.io/repos/pinzolo/logdup/badge.png)](https://coveralls.io/r/pinzolo/logdup)
 
-`Logdup` duplicates logs partially.  
+`Logdup` duplicates logs partially.
 This extends `Logger` that is a built-in library of Ruby.
 
 ## Installation
@@ -47,7 +47,7 @@ logger.info("ccc")
 
 * 1.9.3
 * 2.0.0
-* 2.1.0
+* 2.1.2
 
 ## Contributing
 
@@ -56,3 +56,9 @@ logger.info("ccc")
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+## Changelog
+
+* v1.0.0 (2014-02-27 JST): First release
+* v1.0.1 (2014-02-27 JST): Add homepage
+* v1.0.2 (2014-05-26 JST): Confirmed that this gem is valid on Ruby 2.1.2
