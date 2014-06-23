@@ -42,16 +42,16 @@ describe Logger do
         lines = File.readlines(log_file("base-on-single"))
         syms.each do |sym|
           1.upto(3) do |i|
-            expect(include_message?(lines, "#{sym}-0#{i}")).to be_true
+            expect(include_message?(lines, "#{sym}-0#{i}")).to be_truthy
           end
         end
       end
       it "logged partially in single.log" do
         lines = File.readlines(log_file("single"))
         syms.each do |sym|
-          expect(include_message?(lines, "#{sym}-01")).to be_false
-          expect(include_message?(lines, "#{sym}-02")).to be_true
-          expect(include_message?(lines, "#{sym}-03")).to be_false
+          expect(include_message?(lines, "#{sym}-01")).to be_falsy
+          expect(include_message?(lines, "#{sym}-02")).to be_truthy
+          expect(include_message?(lines, "#{sym}-03")).to be_falsy
         end
       end
     end
@@ -82,28 +82,28 @@ describe Logger do
         lines = File.readlines(log_file("base-on-nested"))
         syms.each do |sym|
           1.upto(5) do |i|
-            expect(include_message?(lines, "#{sym}-0#{i}")).to be_true
+            expect(include_message?(lines, "#{sym}-0#{i}")).to be_truthy
           end
         end
       end
       it "logged partially in nested-outer.log" do
         lines = File.readlines(log_file("nested-outer"))
         syms.each do |sym|
-          expect(include_message?(lines, "#{sym}-01")).to be_false
-          expect(include_message?(lines, "#{sym}-02")).to be_true
-          expect(include_message?(lines, "#{sym}-03")).to be_true
-          expect(include_message?(lines, "#{sym}-04")).to be_true
-          expect(include_message?(lines, "#{sym}-05")).to be_false
+          expect(include_message?(lines, "#{sym}-01")).to be_falsy
+          expect(include_message?(lines, "#{sym}-02")).to be_truthy
+          expect(include_message?(lines, "#{sym}-03")).to be_truthy
+          expect(include_message?(lines, "#{sym}-04")).to be_truthy
+          expect(include_message?(lines, "#{sym}-05")).to be_falsy
         end
       end
       it "logged partially in nested-inner.log" do
         lines = File.readlines(log_file("nested-inner"))
         syms.each do |sym|
-          expect(include_message?(lines, "#{sym}-01")).to be_false
-          expect(include_message?(lines, "#{sym}-02")).to be_false
-          expect(include_message?(lines, "#{sym}-03")).to be_true
-          expect(include_message?(lines, "#{sym}-04")).to be_false
-          expect(include_message?(lines, "#{sym}-05")).to be_false
+          expect(include_message?(lines, "#{sym}-01")).to be_falsy
+          expect(include_message?(lines, "#{sym}-02")).to be_falsy
+          expect(include_message?(lines, "#{sym}-03")).to be_truthy
+          expect(include_message?(lines, "#{sym}-04")).to be_falsy
+          expect(include_message?(lines, "#{sym}-05")).to be_falsy
         end
       end
     end
@@ -127,17 +127,17 @@ describe Logger do
       it "logged all in base-on-thread.log" do
         lines = File.readlines(log_file("base-on-thread"))
         1.upto(5) do |i|
-          expect(include_message?(lines, "info-0#{i}")).to be_true
+          expect(include_message?(lines, "info-0#{i}")).to be_truthy
         end
       end
       it "logged at same thread in thread.log" do
         lines = File.readlines(log_file("thread"))
         syms.each do |sym|
-          expect(include_message?(lines, "info-01")).to be_false
-          expect(include_message?(lines, "info-02")).to be_false
-          expect(include_message?(lines, "info-03")).to be_true
-          expect(include_message?(lines, "info-04")).to be_false
-          expect(include_message?(lines, "info-05")).to be_false
+          expect(include_message?(lines, "info-01")).to be_falsy
+          expect(include_message?(lines, "info-02")).to be_falsy
+          expect(include_message?(lines, "info-03")).to be_truthy
+          expect(include_message?(lines, "info-04")).to be_falsy
+          expect(include_message?(lines, "info-05")).to be_falsy
         end
       end
     end
@@ -147,18 +147,18 @@ describe Logger do
         logger.dup_to(log_file("buffer"), buffer_size: 2) do
           logger.info("info-01")
           logger.info("info-02")
-          expect(File.exists?(log_file("buffer"))).to be_false
+          expect(File.exists?(log_file("buffer"))).to be_falsy
           logger.info("info-03")
-          expect(File.exists?(log_file("buffer"))).to be_true
+          expect(File.exists?(log_file("buffer"))).to be_truthy
           lines = File.readlines(log_file("buffer"))
-          expect(include_message?(lines, "info-01")).to be_true
-          expect(include_message?(lines, "info-02")).to be_false
-          expect(include_message?(lines, "info-03")).to be_false
+          expect(include_message?(lines, "info-01")).to be_truthy
+          expect(include_message?(lines, "info-02")).to be_falsy
+          expect(include_message?(lines, "info-03")).to be_falsy
         end
         lines = File.readlines(log_file("buffer"))
-        expect(include_message?(lines, "info-01")).to be_true
-        expect(include_message?(lines, "info-02")).to be_true
-        expect(include_message?(lines, "info-03")).to be_true
+        expect(include_message?(lines, "info-01")).to be_truthy
+        expect(include_message?(lines, "info-02")).to be_truthy
+        expect(include_message?(lines, "info-03")).to be_truthy
       end
     end
   end
